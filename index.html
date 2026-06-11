@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L0VNV0ETCK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-L0VNV0ETCK');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7482216000858458"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dinodle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0e1a0e; --bg2: #152015; --bg3: #1c2e1c;
+      --green: #4ade80; --green-dim: #22c55e; --green-dark: #166534;
+      --cream: #f0fdf4; --muted: #6b7c6b; --border: #2a3f2a;
+      --correct: #166534; --correct-text: #4ade80;
+      --wrong: #1e2a1e; --wrong-text: #4b5e4b;
+    }
+    body { background: var(--bg); display: flex; justify-content: center; min-height: 100vh; }
+    #app { background: var(--bg); padding: 20px 16px 28px; width: 100%; max-width: 680px; font-family: 'Inter', sans-serif; min-height: 500px; }
+    .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px; }
+    .logo-wrap { display: flex; align-items: center; gap: 12px; }
+    .logo-box { width: 44px; height: 44px; background: var(--bg3); border: 1.5px solid var(--green-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--cream); letter-spacing: 2px; line-height: 1; }
+    .logo-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .date-badge { font-size: 11px; color: var(--green); background: var(--bg3); border: 1px solid var(--green-dark); border-radius: 20px; padding: 4px 12px; font-weight: 500; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .icon-btn:hover { border-color: var(--green-dark); color: var(--cream); }
+    .streak-badge { font-size: 11px; color: var(--cream); background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .streak-badge .fire { font-size: 13px; }
+    .col-headers { display: grid; grid-template-columns: 100px repeat(6, minmax(0,1fr)); gap: 4px; margin-bottom: 5px; }
+    .col-h { font-size: 10px; font-weight: 600; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 2px; }
+    .col-h.first { text-align: left; padding-left: 10px; }
+    .guess-row { display: grid; grid-template-columns: 100px repeat(6, minmax(0,1fr)); gap: 4px; margin-bottom: 4px; }
+    .cell { height: 46px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; text-align: center; padding: 4px 3px; color: var(--wrong-text); background: var(--wrong); text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.3; }
+    .cell.name-cell { justify-content: flex-start; padding-left: 10px; font-size: 11px; background: var(--bg3); color: var(--cream); border-color: var(--border); text-align: left; }
+    .cell.name-cell.correct { background: var(--correct); border-color: var(--green-dim); color: var(--correct-text); }
+    .cell.correct { background: var(--correct); border-color: var(--green-dim); color: var(--correct-text); }
+    .cell.close { background: #713f12; border-color: #ca8a04; color: #fde047; }
+    .cell.empty { background: var(--bg2); border: 1px dashed var(--border); color: transparent; }
+    .cell.flip { animation: flip 0.4s ease forwards; }
+    @keyframes flip {
+      0% { transform: scaleY(1); }
+      50% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+    .input-area { margin-top: 16px; position: relative; }
+    .input-row { display: flex; gap: 8px; }
+    .dino-input { flex: 1; height: 44px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 10px; color: var(--cream); font-family: 'Inter', sans-serif; font-size: 13px; padding: 0 14px; outline: none; }
+    .dino-input::placeholder { color: var(--muted); }
+    .dino-input:focus { border-color: var(--green-dark); background: var(--bg3); }
+    .guess-btn { height: 44px; padding: 0 20px; background: var(--green); color: #0e1a0e; border: none; border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1.5px; cursor: pointer; white-space: nowrap; }
+    .guess-btn:hover { background: var(--green-dim); }
+    .guess-btn:active { transform: scale(0.97); }
+    .guess-btn:disabled { background: var(--bg3); color: var(--muted); cursor: default; }
+    .sugs { position: absolute; top: calc(100% + 4px); left: 0; right: 80px; background: var(--bg2); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; z-index: 20; max-height: 180px; overflow-y: auto; }
+    .sug-item { padding: 10px 14px; font-size: 12px; color: var(--cream); cursor: pointer; border-bottom: 1px solid var(--border); }
+    .sug-item:last-child { border-bottom: none; }
+    .sug-item:hover, .sug-item.selected { background: var(--bg3); color: var(--green); }
+    .status { margin-top: 12px; font-size: 12px; color: var(--muted); text-align: center; font-weight: 500; letter-spacing: 0.3px; }
+    .status.win { color: var(--green); font-size: 13px; }
+    .status.lose { color: #f87171; }
+    .legend { display: flex; gap: 16px; justify-content: center; margin-top: 14px; }
+    .leg { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); font-weight: 500; }
+    .leg-box { width: 14px; height: 14px; border-radius: 4px; }
+    .leg-box.correct { background: var(--correct); border: 1px solid var(--green-dim); }
+    .leg-box.close { background: #713f12; border: 1px solid #ca8a04; }
+    .leg-box.wrong { background: var(--wrong); border: 1px solid var(--border); }
+    .current-mode { font-size: 11px; color: var(--muted); margin-bottom: 18px; text-align: center; letter-spacing: 0.3px; }
+    .current-mode span { color: var(--green); font-weight: 600; }
+
+    /* Modals */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal { background: var(--bg2); border: 1.5px solid var(--border); border-radius: 16px; padding: 32px 28px; width: 90%; max-width: 400px; text-align: center; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--cream); letter-spacing: 2px; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .modal-btns { display: flex; flex-direction: column; gap: 10px; }
+    .modal-mode-btn { height: 52px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg3); color: var(--cream); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .modal-mode-btn:hover { border-color: var(--green); color: var(--green); }
+    .modal-mode-btn .mode-tag { font-size: 10px; font-family: 'Inter', sans-serif; font-weight: 600; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+    .modal-mode-btn:hover .mode-tag { color: var(--green); }
+
+    /* How to play */
+    .htp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; text-align: left; }
+    .htp-cell { min-width: 52px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; text-transform: uppercase; }
+    .htp-cell.correct { background: var(--correct); border: 1px solid var(--green-dim); color: var(--correct-text); }
+    .htp-cell.close { background: #713f12; border: 1px solid #ca8a04; color: #fde047; }
+    .htp-cell.wrong { background: var(--wrong); border: 1px solid var(--border); color: var(--wrong-text); }
+    .htp-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .htp-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .htp-close { margin-top: 20px; height: 40px; width: 100%; border-radius: 10px; border: none; background: var(--green); color: #0e1a0e; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1.5px; cursor: pointer; }
+    .htp-close:hover { background: var(--green-dim); }
+
+    /* Win modal */
+    .win-dino { font-size: 48px; margin-bottom: 8px; }
+    .win-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--green); letter-spacing: 2px; margin-bottom: 4px; }
+    .lose-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #f87171; letter-spacing: 2px; margin-bottom: 4px; }
+    .win-name { font-size: 14px; color: var(--cream); font-weight: 600; margin-bottom: 8px; }
+    .win-fact { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+    .win-streak { font-size: 13px; color: var(--cream); margin-bottom: 20px; }
+    .win-streak span { color: var(--green); font-weight: 700; font-size: 18px; }
+    .share-btn { height: 44px; width: 100%; border-radius: 10px; border: none; background: var(--green); color: #0e1a0e; font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 8px; }
+    .share-btn:hover { background: var(--green-dim); }
+    .upgrade-btn { height: 44px; width: 100%; border-radius: 10px; border: 1.5px solid var(--green-dark); background: transparent; color: var(--green); font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 8px; }
+    .upgrade-btn:hover { background: var(--bg3); }
+    .dismiss-btn { height: 36px; width: 100%; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 12px; cursor: pointer; }
+    .dismiss-btn:hover { color: var(--cream); border-color: var(--muted); }
+    .copied-msg { font-size: 11px; color: var(--green); margin-top: 6px; height: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- Mode select modal -->
+  <div class="modal-overlay" id="mode-modal">
+    <div class="modal">
+      <div class="modal-title">🦕 DINODLE</div>
+      <div class="modal-sub">Guess today's dinosaur from its diet, size, region, era, type, and locomotion.<br>Choose your difficulty to begin.</div>
+      <div class="modal-btns">
+        <button class="modal-mode-btn" data-tier="1"><span>Easy</span><span class="mode-tag">Famous dinos only</span></button>
+        <button class="modal-mode-btn" data-tier="2"><span>Medium</span><span class="mode-tag">Jurassic Park fans</span></button>
+        <button class="modal-mode-btn" data-tier="3"><span>Hard</span><span class="mode-tag">Paleontologist mode</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to play modal -->
+  <div class="modal-overlay" id="htp-modal" style="display:none;">
+    <div class="modal">
+      <div class="modal-title">How to play</div>
+      <div class="modal-sub" style="margin-bottom:16px;">Guess the dinosaur in 6 tries. Each guess reveals clues about each category.</div>
+      <div class="htp-row"><div class="htp-cell correct">Jurassic</div><div class="htp-text">Green = exact match for that category.</div></div>
+      <div class="htp-row"><div class="htp-cell close">Large</div><div class="htp-text">Yellow = close but not exact. One step away in size or era, neighboring region, or similar diet/type.</div></div>
+      <div class="htp-row"><div class="htp-cell wrong">Asia</div><div class="htp-text">Grey = no match.</div></div>
+      <hr class="htp-divider">
+      <div style="font-size:11px; color:var(--muted); text-align:left; line-height:1.7;">
+        <div>🥩 <b style="color:var(--cream)">Diet</b> — Carnivore (Hypercarnivore, Piscivore, Insectivore, General), Herbivore (Browser, Grazer), Omnivore. Yellow = right group, wrong type.</div>
+        <div>📏 <b style="color:var(--cream)">Size</b> — small → medium → large → gigantic</div>
+        <div>🌍 <b style="color:var(--cream)">Region</b> — where fossils were found</div>
+        <div>⏳ <b style="color:var(--cream)">Era</b> — Triassic, Jurassic, or Cretaceous</div>
+        <div>🦕 <b style="color:var(--cream)">Type</b> — theropod, sauropod, ceratopsian, etc. Yellow = related group.</div>
+        <div>🦵 <b style="color:var(--cream)">Move</b> — biped, quadruped, or can fly</div>
+      </div>
+      <div style="font-size:10px; color:var(--muted); margin-top:12px; text-align:left; line-height:1.5; font-style:italic;">Note: pterosaurs (Pteranodon, Quetzalcoatlus, etc.) are included for fun — they're technically flying reptiles, not true dinosaurs.</div>
+      <button class="htp-close" id="htp-close">Got it</button>
+    </div>
+  </div>
+
+  <!-- Win modal -->
+  <div class="modal-overlay" id="win-modal" style="display:none;">
+    <div class="modal">
+      <div class="win-dino">🦖</div>
+      <div class="win-title">CORRECT!</div>
+      <div class="win-name" id="win-name"></div>
+      <div class="win-fact" id="win-fact"></div>
+      <div class="win-streak">Streak: <span id="win-streak-num">0</span> 🔥</div>
+      <button class="share-btn" id="share-btn">SHARE RESULT</button>
+      <div class="copied-msg" id="copied-msg"></div>
+      <div id="upgrade-wrap"></div>
+      <button class="dismiss-btn" id="win-dismiss">Close</button>
+    </div>
+  </div>
+
+  <!-- Lose modal -->
+  <div class="modal-overlay" id="lose-modal" style="display:none;">
+    <div class="modal">
+      <div class="win-dino">💀</div>
+      <div class="lose-title">GAME OVER</div>
+      <div class="win-name" id="lose-name"></div>
+      <div class="win-fact" id="lose-fact"></div>
+      <button class="share-btn" id="lose-share-btn">SHARE RESULT</button>
+      <div class="copied-msg" id="lose-copied-msg"></div>
+      <button class="dismiss-btn" id="lose-dismiss">Close</button>
+    </div>
+  </div>
+
+  <div id="app">
+    <div class="header">
+      <div class="logo-wrap">
+        <div class="logo-box">🦕</div>
+        <div>
+          <div class="logo-text">DINODLE</div>
+          <div class="logo-sub">Guess today's dinosaur</div>
+        </div>
+        <button class="icon-btn" id="mode-btn" title="Change mode">☰</button>
+      </div>
+      <div class="header-right">
+        <div class="streak-badge"><span class="fire">🔥</span><span id="streak-display">0</span></div>
+        <button class="icon-btn" id="htp-btn" title="How to play">?</button>
+        <div class="date-badge" id="date-badge">--</div>
+      </div>
+    </div>
+
+    <div class="current-mode" id="current-mode"></div>
+
+    <div class="col-headers">
+      <div class="col-h first">Guess</div>
+      <div class="col-h">Diet</div>
+      <div class="col-h">Size</div>
+      <div class="col-h">Region</div>
+      <div class="col-h">Era</div>
+      <div class="col-h">Type</div>
+      <div class="col-h">Move</div>
+    </div>
+
+    <div id="rows"></div>
+    <div id="ad-slot"></div>
+    <div class="input-area">
+      <div class="input-row">
+        <input id="inp" class="dino-input" type="text" placeholder="Type a dinosaur name..." autocomplete="off" />
+        <button id="btn" class="guess-btn">GUESS</button>
+      </div>
+      <div class="sugs" id="sugs" style="display:none"></div>
+    </div>
+
+    <div class="status" id="status">Loading...</div>
+
+    <div class="legend">
+      <div class="leg"><div class="leg-box correct"></div> Correct</div>
+      <div class="leg"><div class="leg-box close"></div> Close</div>
+      <div class="leg"><div class="leg-box wrong"></div> Wrong</div>
+    </div>
+    <div style="text-align:center; margin-top:20px; font-size:11px;">
+      <a href="/privacy.html" style="color:var(--muted);">Privacy Policy</a>
+    </div>
+  </div>
+
+  <script>
+    const FIELDS = ['diet', 'size', 'region', 'era', 'type', 'locomotion'];
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+    // Use UTC so the daily puzzle is consistent for all timezones
+    const now = new Date();
+    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const startUTC = new Date('2025-01-01T00:00:00Z');
+    const dayIdx = Math.floor((todayUTC - startUTC) / 86400000);
+
+    const MODE_LABELS = { 1: 'Easy', 2: 'Medium', 3: 'Hard' };
+    const SIZE_ORDER = ['small', 'medium', 'large', 'gigantic'];
+    const ERA_ORDER = ['Triassic', 'Jurassic', 'Cretaceous'];
+    const REGION_CLOSE = {
+      'North America': ['South America'],
+      'South America': ['North America'],
+      'Europe': ['Asia', 'Africa'],
+      'Asia': ['Europe'],
+      'Africa': ['Europe'],
+      'Australia': []
+    };
+
+    // Sister-group relationships for "close" on type
+    const TYPE_CLOSE = {
+      'hadrosaur':      ['ornithopod'],
+      'ornithopod':     ['hadrosaur'],
+      'ankylosaur':     ['stegosaur'],
+      'stegosaur':      ['ankylosaur'],
+      'ceratopsian':    ['pachycephalosaur'],
+      'pachycephalosaur': ['ceratopsian'],
+    };
+
+    document.getElementById('date-badge').textContent = months[now.getUTCMonth()] + ' ' + now.getUTCDate();
+
+    let ALL_DINOS = [], DINOS = [], TARGET = null, guessesLeft = 6, guesses = [], gameOver = false, selectedTier = 1;
+
+    const gameStates = { 1: null, 2: null, 3: null };
+
+    function saveState() {
+      gameStates[selectedTier] = { guesses: [...guesses], guessesLeft, gameOver };
+      localStorage.setItem('dinodle_states', JSON.stringify(gameStates));
+      localStorage.setItem('dinodle_day', dayIdx);
+    }
+
+    function loadState() {
+      const savedDay = parseInt(localStorage.getItem('dinodle_day') || '-1');
+      const saved = savedDay === dayIdx ? JSON.parse(localStorage.getItem('dinodle_states') || 'null') : null;
+      if (saved) {
+        gameStates[1] = saved[1];
+        gameStates[2] = saved[2];
+        gameStates[3] = saved[3];
+      }
+      const state = gameStates[selectedTier];
+      if (state) {
+        guesses = [...state.guesses];
+        guessesLeft = state.guessesLeft;
+        gameOver = state.gameOver;
+        document.getElementById('btn').disabled = gameOver;
+        if (gameOver && guesses.length > 0) {
+          const won = guesses[guesses.length - 1].name.toLowerCase() === TARGET.name.toLowerCase();
+          setStatus(won ? 'Correct! It was ' + TARGET.name + '!' : 'No guesses left. It was ' + TARGET.name + '.', won ? 'win' : 'lose');
+        } else {
+          setStatus(guessesLeft + ' guess' + (guessesLeft === 1 ? '' : 'es') + ' remaining');
+        }
+      } else {
+        guesses = [];
+        guessesLeft = 6;
+        gameOver = false;
+        document.getElementById('btn').disabled = false;
+        setStatus('6 guesses remaining');
+      }
+    }
+
+    // Streak
+    function getStreak() { return parseInt(localStorage.getItem('dinodle_streak') || '0'); }
+    function getLastWinDay() { return parseInt(localStorage.getItem('dinodle_last_win') || '-1'); }
+    function updateStreak() {
+      const last = getLastWinDay();
+      let streak = getStreak();
+      if (last === dayIdx) return streak;
+      if (last === dayIdx - 1) streak++;
+      else streak = 1;
+      localStorage.setItem('dinodle_streak', streak);
+      localStorage.setItem('dinodle_last_win', dayIdx);
+      return streak;
+    }
+    function resetStreak() {
+      localStorage.setItem('dinodle_streak', '0');
+      displayStreak();
+    }
+    function displayStreak() {
+      document.getElementById('streak-display').textContent = getStreak();
+    }
+    displayStreak();
+
+    function initGame() {
+      DINOS = ALL_DINOS.filter(d => d.tier <= selectedTier);
+      TARGET = DINOS[dayIdx % DINOS.length];
+      document.getElementById('inp').value = '';
+      document.getElementById('current-mode').innerHTML = 'Mode: <span>' + MODE_LABELS[selectedTier] + '</span>';
+      loadState();
+      renderRows();
+    }
+
+    fetch('dinosaurs.json')
+      .then(r => r.json())
+      .then(data => {
+        ALL_DINOS = data;
+        const savedDay = parseInt(localStorage.getItem('dinodle_day') || '-1');
+        const savedStates = savedDay === dayIdx ? JSON.parse(localStorage.getItem('dinodle_states') || 'null') : null;
+        if (savedStates) {
+          const lastTier = Object.keys(savedStates).find(t => savedStates[t] !== null);
+          if (lastTier) {
+            selectedTier = parseInt(lastTier);
+            document.getElementById('mode-modal').style.display = 'none';
+            initGame();
+            return;
+          }
+        }
+      })
+      .catch(() => setStatus('Failed to load dinosaurs.json'));
+
+    document.querySelectorAll('.modal-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        saveState();
+        selectedTier = parseInt(btn.dataset.tier);
+        document.getElementById('mode-modal').style.display = 'none';
+        initGame();
+      });
+    });
+
+    document.getElementById('htp-btn').addEventListener('click', () => {
+      document.getElementById('htp-modal').style.display = 'flex';
+    });
+    document.getElementById('htp-close').addEventListener('click', () => {
+      document.getElementById('htp-modal').style.display = 'none';
+    });
+    document.getElementById('mode-btn').addEventListener('click', () => {
+      document.getElementById('mode-modal').style.display = 'flex';
+    });
+
+    function getDietClass(guessVal, targetVal) {
+      if (guessVal === targetVal) return 'correct';
+      const guessGroup = guessVal.split(':')[0].trim();
+      const targetGroup = targetVal.split(':')[0].trim();
+      if (guessGroup === targetGroup && guessGroup !== 'Omnivore') return 'close';
+      return '';
+    }
+
+    function getCellClass(field, guessVal, targetVal) {
+      if (guessVal === targetVal) return 'correct';
+      if (field === 'diet') return getDietClass(guessVal, targetVal);
+      if (field === 'size') {
+        const gi = SIZE_ORDER.indexOf(guessVal), ti = SIZE_ORDER.indexOf(targetVal);
+        return Math.abs(gi - ti) === 1 ? 'close' : '';
+      }
+      if (field === 'region') return (REGION_CLOSE[guessVal] || []).includes(targetVal) ? 'close' : '';
+      if (field === 'era') {
+        const gi = ERA_ORDER.indexOf(guessVal), ti = ERA_ORDER.indexOf(targetVal);
+        return Math.abs(gi - ti) === 1 ? 'close' : '';
+      }
+      if (field === 'type') return (TYPE_CLOSE[guessVal] || []).includes(targetVal) ? 'close' : '';
+      return '';
+    }
+
+    function getSizeArrow(guessVal, targetVal) {
+      if (guessVal === targetVal) return '';
+      const gi = SIZE_ORDER.indexOf(guessVal), ti = SIZE_ORDER.indexOf(targetVal);
+      if (gi === -1 || ti === -1) return '';
+      return ti > gi ? ' ↑' : ' ↓';
+    }
+
+    function renderRows(animateRow) {
+      const c = document.getElementById('rows');
+      c.innerHTML = '';
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement('div');
+        row.className = 'guess-row';
+        if (guesses[i]) {
+          const g = guesses[i];
+          const nc = document.createElement('div');
+          nc.className = 'cell name-cell' + (g.name.toLowerCase() === TARGET.name.toLowerCase() ? ' correct' : '');
+          nc.textContent = g.name;
+          row.appendChild(nc);
+          FIELDS.forEach((f, fi) => {
+            const cell = document.createElement('div');
+            const cls = getCellClass(f, g[f], TARGET[f]);
+            cell.className = 'cell ' + cls;
+            let txt = g[f];
+            if (f === 'size') txt += getSizeArrow(g[f], TARGET[f]);
+            cell.textContent = txt;
+            if (i === animateRow) {
+              cell.style.animationDelay = (fi * 80) + 'ms';
+              cell.classList.add('flip');
+            }
+            row.appendChild(cell);
+          });
+        } else {
+          for (let j = 0; j < 7; j++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell empty';
+            row.appendChild(cell);
+          }
+        }
+        c.appendChild(row);
+      }
+    }
+
+    function setStatus(msg, cls) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = 'status ' + (cls || '');
+    }
+
+    function buildShareText() {
+      const modeLabel = MODE_LABELS[selectedTier];
+      const used = 6 - guessesLeft;
+      const won = guesses.length > 0 && guesses[guesses.length - 1].name.toLowerCase() === TARGET.name.toLowerCase();
+      let grid = guesses.map(g =>
+        FIELDS.map(f => {
+          const cls = getCellClass(f, g[f], TARGET[f]);
+          return cls === 'correct' ? '🟩' : cls === 'close' ? '🟨' : '⬛';
+        }).join('')
+      ).join('\n');
+      const score = won ? used + '/6' : 'X/6';
+      return `Dinodle — ${modeLabel} — ${months[now.getUTCMonth()]} ${now.getUTCDate()}\n${score}\n\n${grid}\n\nPlay at dinodle.netlify.app`;
+    }
+
+    function copyToClipboard(text, successEl) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          successEl.textContent = 'Copied to clipboard!';
+          setTimeout(() => successEl.textContent = '', 2000);
+        }).catch(() => fallbackCopy(text, successEl));
+      } else {
+        fallbackCopy(text, successEl);
+      }
+    }
+
+    function fallbackCopy(text, successEl) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        successEl.textContent = 'Copied to clipboard!';
+        setTimeout(() => successEl.textContent = '', 2000);
+      } catch (e) {
+        successEl.textContent = 'Copy failed — paste manually.';
+      }
+      document.body.removeChild(ta);
+    }
+
+    function showWinModal() {
+      const streak = updateStreak();
+      displayStreak();
+      document.getElementById('win-name').textContent = TARGET.name;
+      const factEl = document.getElementById('win-fact');
+      factEl.textContent = TARGET.fact || '';
+      factEl.style.display = TARGET.fact ? 'block' : 'none';
+      document.getElementById('win-streak-num').textContent = streak;
+
+      const wrap = document.getElementById('upgrade-wrap');
+      wrap.innerHTML = '';
+      if (selectedTier < 3) {
+        const nextLabel = MODE_LABELS[selectedTier + 1];
+        const btn = document.createElement('button');
+        btn.className = 'upgrade-btn';
+        btn.textContent = 'TRY ' + nextLabel.toUpperCase() + ' MODE';
+        btn.addEventListener('click', () => {
+          selectedTier++;
+          document.getElementById('win-modal').style.display = 'none';
+          initGame();
+        });
+        wrap.appendChild(btn);
+      }
+      document.getElementById('win-modal').style.display = 'flex';
+    }
+
+    function showLoseModal() {
+      resetStreak();
+      document.getElementById('lose-name').textContent = TARGET.name;
+      const factEl = document.getElementById('lose-fact');
+      factEl.textContent = TARGET.fact || '';
+      factEl.style.display = TARGET.fact ? 'block' : 'none';
+      document.getElementById('lose-modal').style.display = 'flex';
+    }
+
+    document.getElementById('share-btn').addEventListener('click', () => {
+      copyToClipboard(buildShareText(), document.getElementById('copied-msg'));
+    });
+
+    document.getElementById('lose-share-btn').addEventListener('click', () => {
+      copyToClipboard(buildShareText(), document.getElementById('lose-copied-msg'));
+    });
+
+    document.getElementById('win-dismiss').addEventListener('click', () => {
+      document.getElementById('win-modal').style.display = 'none';
+    });
+
+    document.getElementById('lose-dismiss').addEventListener('click', () => {
+      document.getElementById('lose-modal').style.display = 'none';
+    });
+
+    function submitGuess(name) {
+      if (gameOver || !TARGET) return;
+      const dino = DINOS.find(d => d.name.toLowerCase() === name.toLowerCase());
+      if (!dino) { setStatus('Dinosaur not found — try another name!'); return; }
+      if (guesses.find(g => g.name.toLowerCase() === name.toLowerCase())) { setStatus('Already guessed that one!'); return; }
+      const animRow = guesses.length;
+      guesses.push(dino);
+      guessesLeft--;
+      saveState();
+      renderRows(animRow);
+      document.getElementById('inp').value = '';
+      document.getElementById('sugs').style.display = 'none';
+      sugIndex = -1;
+      if (dino.name.toLowerCase() === TARGET.name.toLowerCase()) {
+        gameOver = true;
+        document.getElementById('btn').disabled = true;
+        setStatus('Correct! It was ' + TARGET.name + '!', 'win');
+        setTimeout(showWinModal, 500);
+      } else if (guessesLeft === 0) {
+        gameOver = true;
+        setStatus('No guesses left. It was ' + TARGET.name + '.', 'lose');
+        document.getElementById('btn').disabled = true;
+        setTimeout(showLoseModal, 500);
+      } else {
+        setStatus(guessesLeft + ' guess' + (guessesLeft === 1 ? '' : 'es') + ' remaining');
+      }
+    }
+
+    document.getElementById('btn').addEventListener('click', () => {
+      const v = document.getElementById('inp').value.trim();
+      if (v) submitGuess(v);
+    });
+
+    // Suggestion keyboard navigation
+    let sugIndex = -1;
+
+    function getSugItems() {
+      return document.getElementById('sugs').querySelectorAll('.sug-item');
+    }
+
+    function updateSugSelection(items, newIndex) {
+      items.forEach(el => el.classList.remove('selected'));
+      sugIndex = newIndex;
+      if (sugIndex >= 0 && sugIndex < items.length) {
+        items[sugIndex].classList.add('selected');
+        items[sugIndex].scrollIntoView({ block: 'nearest' });
+        document.getElementById('inp').value = items[sugIndex].dataset.name;
+      }
+    }
+
+    document.getElementById('inp').addEventListener('keydown', e => {
+      const sugsEl = document.getElementById('sugs');
+      const items = getSugItems();
+      const sugsVisible = sugsEl.style.display !== 'none' && items.length > 0;
+
+      if (e.key === 'ArrowDown') {
+        if (sugsVisible) {
+          e.preventDefault();
+          updateSugSelection(items, Math.min(sugIndex + 1, items.length - 1));
+        }
+      } else if (e.key === 'ArrowUp') {
+        if (sugsVisible) {
+          e.preventDefault();
+          updateSugSelection(items, Math.max(sugIndex - 1, 0));
+        }
+      } else if (e.key === 'Escape') {
+        sugsEl.style.display = 'none';
+        sugIndex = -1;
+      } else if (e.key === 'Enter') {
+        const v = e.target.value.trim();
+        if (v) { sugsEl.style.display = 'none'; sugIndex = -1; submitGuess(v); }
+      }
+    });
+
+    document.getElementById('inp').addEventListener('input', e => {
+      const v = e.target.value.trim().toLowerCase();
+      const sugsEl = document.getElementById('sugs');
+      sugIndex = -1;
+      if (!v || !DINOS.length) { sugsEl.style.display = 'none'; return; }
+      const matches = DINOS.filter(d => d.name.toLowerCase().includes(v)).slice(0, 6);
+      if (!matches.length) { sugsEl.style.display = 'none'; return; }
+      sugsEl.innerHTML = matches.map(d => `<div class="sug-item" data-name="${d.name}">${d.name}</div>`).join('');
+      sugsEl.style.display = 'block';
+      sugsEl.querySelectorAll('.sug-item').forEach(el => {
+        el.addEventListener('click', () => {
+          document.getElementById('inp').value = el.dataset.name;
+          sugsEl.style.display = 'none';
+          sugIndex = -1;
+          submitGuess(el.dataset.name);
+        });
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#inp') && !e.target.closest('#sugs')) {
+        document.getElementById('sugs').style.display = 'none';
+        sugIndex = -1;
+      }
+    });
+  </script>
+</body>
+</html>
