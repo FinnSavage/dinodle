@@ -40,3 +40,4 @@ Single-page app — no build step, no framework. Just `index.html`, `dinosaurs.j
 - Dinosaur data is in `dinosaurs.json` (name, diet, size, region, era, type, locomotion, tier, fact)
 - Game state and streak are stored in `localStorage`
 - Daily puzzle is derived from UTC date offset from 2025-01-01
+
